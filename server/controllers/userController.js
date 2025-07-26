@@ -61,14 +61,24 @@ const loginUser = async (req, res) => {
 };
 
 const getAllUser = async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
   try {
-    const {firstName, lastName} = req.query;
-  
-    return res.json({
-      firstName, lastName
-    })
+    const users = await User.find({
+      ...keyword,
+      _id: { $ne: req.user._id }, // exclude the current user
+    }).select("-password");
+
+    res.status(200).json(users);
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
