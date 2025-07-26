@@ -7,6 +7,7 @@ const notFound = require("./middlewares/notFound.js");
 const errorHandler = require("./middlewares/errorHandler.js");
 
 const userRoutes = require("./routes/userRoutes.js");
+const chatRoutes = require("./routes/chatRoutes.js");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -30,6 +31,7 @@ app.get("/api/chat/:id", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
+app.use("/api/chat", chatRoutes);
 
 
 app.use(notFound);
